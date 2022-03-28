@@ -1,4 +1,5 @@
 const express = require('express')
+const { connection } = require('../database/config')
 
 class Server {
 
@@ -7,12 +8,20 @@ class Server {
         this.port = 3000;
         this.userPath = '/api/usuario'
 
+        // Conectar a base de datos
+        this.conectarDB();
+
         // Middlewares
         this.middlewares();
 
         // Rutas
         this.routes();
     }
+
+    async conectarDB(){
+        await connection();
+    }
+
 
     middlewares() {
         this.app.use( express.static('public'));
