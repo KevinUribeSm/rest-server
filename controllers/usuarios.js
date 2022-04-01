@@ -33,7 +33,7 @@ const usuariosPut = async (req, res) => {
         resto.contrasena = bcryptjs.hashSync( contrasena, salt );
     }
 
-    const usuario = await Usuario.findByIdAndUpdate( id, resto);
+    const usuario = await Usuario.findByIdAndUpdate( id, resto, {new: true});
 
     res.json(usuario)
 
@@ -51,7 +51,6 @@ const usuariosPost = async (req, res) => {
     await usuario.save()
     
     res.send({
-        "Hola": "post",
         usuario
     });
 }
@@ -60,9 +59,13 @@ const usuariosDelete = async (req, res) => {
 
     const { id } = req.params;
 
+    // retorna usuario a borrar
     const usuario = await Usuario.findByIdAndUpdate( id, { estado : false } );
+    
+    // retorna usuario autenticado(token)
+    const usuarioAutenticado = req.usuario;
 
-    await res.json(usuario)
+    await res.json({ usuario, usuarioAutenticado })
 }
 
 module.exports = { usuariosGet, usuariosPut, usuariosPost, usuariosDelete}
